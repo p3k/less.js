@@ -19,6 +19,7 @@ VERSION = `cat package.json | grep version \
 														| grep -o '[0-9]\.[0-9]\.[0-9]\+'`
 DIST = dist/less-${VERSION}.js
 RHINO = dist/less-rhino-${VERSION}.js
+HELMA = dist/less-helma-${VERSION}.js
 DIST_MIN = dist/less-${VERSION}.min.js
 
 less:
@@ -37,6 +38,21 @@ less:
 	      ${SRC}/browser.js >> ${DIST}
 	@@echo "})(window);" >> ${DIST}
 	@@echo ${DIST} built.
+
+helma:
+	@@mkdir -p dist
+	@@touch ${HELMA}
+	@@echo "(function() {" > ${HELMA}
+	@@cat build/require-rhino.js\
+	      build/ecma-5.js\
+	      ${SRC}/parser.js\
+	      ${SRC}/functions.js\
+	      ${SRC}/tree/*.js\
+	      ${SRC}/tree.js\
+	      ${SRC}/colors.js\
+	      ${SRC}/rhino.js >> ${HELMA}
+	@@echo "})();" >> ${HELMA}
+	@@echo ${HELMA} built.
 
 rhino:
 	@@mkdir -p dist
